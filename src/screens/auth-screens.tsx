@@ -1,12 +1,10 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AuthShell } from "@/components/AuthShell";
-import { PasswordField } from "@/components/AuthShell";
-import { Logo, SampleLine } from "@/components/coach-ui";
+import { AuthShell, PasswordField } from "@/components/AuthShell";
+import { Logo } from "@/components/coach-ui";
 import { Button, Field, Input } from "@/components/kit";
 import { asset } from "@/lib/utils";
-import { isEmail, passwordIssue, phoneIssue } from "@/lib/format";
 import { SAMPLE_OTP } from "@/lib/sample-data";
 import { useCoach } from "@/lib/store";
 
@@ -52,9 +50,11 @@ export function SplashScreen() {
   }, [ready, onboarded, user, navigate]);
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-6">
-      <div className="splash-in">
-        <Logo wide />
+    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-background px-8">
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.22),transparent_58%)]" />
+      <Logo wide className="splash-in relative" />
+      <div className="absolute bottom-[max(2.5rem,env(safe-area-inset-bottom))] h-1 w-24 overflow-hidden rounded-full bg-muted">
+        <span className="block h-full w-1/2 animate-pulse rounded-full bg-primary" />
       </div>
     </div>
   );
@@ -72,33 +72,36 @@ export function OnboardingScreen() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col bg-background">
-      <div className="flex items-center justify-between px-5 pt-[max(1rem,env(safe-area-inset-top))]">
-        <Logo />
-        <button type="button" onClick={finish} className="min-h-11 px-2 text-sm font-semibold text-foreground">
-          Skip
-        </button>
-      </div>
-      <img src={asset(slide.image)} alt="" className="mx-5 mt-4 h-56 rounded-3xl object-cover" />
-      <div className="flex flex-1 flex-col px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-6">
-        <div className="mb-4 flex gap-2" aria-hidden>
-          {slides.map((item, itemIndex) => (
-            <span key={item.title} className={itemIndex === index ? "h-1.5 flex-1 rounded-full bg-primary" : "h-1.5 flex-1 rounded-full bg-muted"} />
-          ))}
+    <div className="relative min-h-dvh bg-[#0F2027]">
+      <img src={asset(slide.image)} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0F2027] via-[#0F2027]/80 to-[#0F2027]/20" />
+      <div className="relative flex min-h-dvh flex-col">
+        <div className="flex items-center justify-between px-5 pt-[max(1rem,env(safe-area-inset-top))]">
+          <Logo />
+          <button type="button" onClick={finish} className="min-h-11 rounded-full bg-black/35 px-4 text-sm font-semibold text-white">
+            Skip
+          </button>
         </div>
-        <p className="type-caption text-dim">Coach</p>
-        <h1 className="type-display mt-2 text-foreground">{slide.title}</h1>
-        <p className="mt-3 type-body-lg text-muted-foreground">{slide.body}</p>
-        <div className="mt-auto pt-8">
-          {index < slides.length - 1 ? (
-            <Button full onClick={() => setIndex((value) => value + 1)}>
-              Next
-            </Button>
-          ) : (
-            <Button full onClick={finish}>
-              Get started
-            </Button>
-          )}
+        <div className="mt-auto px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+          <div className="mb-5 flex gap-2" aria-hidden>
+            {slides.map((item, itemIndex) => (
+              <span key={item.title} className={itemIndex === index ? "h-1.5 flex-1 rounded-full bg-primary" : "h-1.5 flex-1 rounded-full bg-white/30"} />
+            ))}
+          </div>
+          <p className="type-caption text-primary">Coach</p>
+          <h1 className="type-display mt-2 text-white">{slide.title}</h1>
+          <p className="mt-3 type-body-lg text-white/80">{slide.body}</p>
+          <div className="mt-8">
+            {index < slides.length - 1 ? (
+              <Button full onClick={() => setIndex((value) => value + 1)}>
+                Next
+              </Button>
+            ) : (
+              <Button full onClick={finish}>
+                Get started
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -108,9 +111,8 @@ export function OnboardingScreen() {
 export function LoginScreen() {
   const { ready, user, login } = useCoach();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("coach@spotmyroster.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -119,48 +121,52 @@ export function LoginScreen() {
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (!isEmail(email)) return setError("Enter the email on your coach account.");
-    if (!password) return setError("Enter your password.");
     setLoading(true);
     window.setTimeout(() => {
       const result = login(email, password);
       setLoading(false);
-      if (!result.ok) return setError("That email and password do not match a coach account.");
-      setError("");
+      if (!result.ok) {
+        toast("No matching coach account.");
+        return;
+      }
       if (!result.user.emailVerified) {
         navigate({ to: "/otp", search: { purpose: "verify", email: result.user.email } });
       } else if (!result.user.profileComplete) navigate({ to: "/setup" });
       else navigate({ to: "/home" });
-    }, 400);
+    }, 280);
   }
 
   return (
-    <AuthShell title="Coach sign in" subtitle="Use the coach account for your club. Athlete sign-in is a separate app." showBack={false}>
-      <SampleLine />
-      <form className="mt-5" onSubmit={submit} noValidate>
-        <Field label="Email" error={error && !password ? error : undefined}>
-          <Input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+    <AuthShell title="Welcome back" subtitle="Sign in to your club. Athlete accounts use a separate app." showBack={false}>
+      <form onSubmit={submit} noValidate>
+        <Field label="Email">
+          <Input type="email" autoComplete="email" inputMode="email" placeholder="you@club.com" value={email} onChange={(event) => setEmail(event.target.value)} />
         </Field>
-        <PasswordField label="Password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} error={error && password ? error : undefined} />
-        {error && password && email ? null : error ? <p className="mb-3 type-helper text-danger">{error}</p> : null}
+        <PasswordField label="Password" autoComplete="current-password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} />
+        <div className="mb-5 flex justify-end">
+          <Link to="/forgot-password" className="type-small font-semibold text-foreground">
+            Forgot password
+          </Link>
+        </div>
         <Button type="submit" full loading={loading}>
           Sign in
         </Button>
       </form>
-      <p className="mt-4 type-small text-muted-foreground">
-        Sample coach: coach@spotmyroster.com · password Roster2026
-      </p>
-      <div className="mt-6 flex flex-col gap-3 type-small">
-        <Link to="/forgot-password" className="font-semibold text-foreground underline">
-          Forgot password
-        </Link>
-        <p className="text-muted-foreground">
-          New coach?{" "}
-          <Link to="/register" className="font-semibold text-foreground underline">
-            Create an account
-          </Link>
-        </p>
-        <p className="text-muted-foreground">
+      <button
+        type="button"
+        className="mt-4 min-h-11 w-full text-sm font-semibold text-muted-foreground"
+        onClick={() => {
+          setEmail("coach@spotmyroster.com");
+          setPassword("Roster2026");
+        }}
+      >
+        Use the sample coach
+      </button>
+      <div className="mt-6 border-t border-border pt-6">
+        <Button variant="outline" full onClick={() => navigate({ to: "/register" })}>
+          Create a coach account
+        </Button>
+        <p className="mt-4 text-center type-small text-muted-foreground">
           <Link to="/profile/terms" className="underline">Terms</Link>
           {" · "}
           <Link to="/profile/privacy-policy" className="underline">Privacy</Link>
@@ -175,7 +181,6 @@ export function RegisterScreen() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", phone: "", password: "", confirm: "" });
   const [agreed, setAgreed] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
   function set<K extends keyof typeof form>(key: K, value: string) {
@@ -184,56 +189,49 @@ export function RegisterScreen() {
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
-    const next: Record<string, string> = {};
-    if (!form.firstName.trim()) next.firstName = "Enter your first name.";
-    if (!form.lastName.trim()) next.lastName = "Enter your last name.";
-    if (!isEmail(form.email)) next.email = "Enter a valid email.";
-    const phone = phoneIssue(form.phone);
-    if (phone) next.phone = phone;
-    const password = passwordIssue(form.password);
-    if (password) next.password = password;
-    if (form.password !== form.confirm) next.confirm = "Passwords do not match.";
-    if (!agreed) next.agreed = "Agree to the Terms and Privacy Policy to create an account.";
-    setErrors(next);
-    if (Object.keys(next).length) return;
     setLoading(true);
     window.setTimeout(() => {
       const result = register(form);
       setLoading(false);
       if (!result.ok) {
-        setErrors({ email: "A coach account already uses that email." });
+        toast("A coach account already uses that email.");
         return;
       }
       navigate({ to: "/verify-email", search: { email: result.email } });
-    }, 400);
+    }, 280);
   }
 
   return (
-    <AuthShell title="Create coach account" subtitle="This account is for coaches only.">
+    <AuthShell title="Create your account" subtitle="For coaches running a club. You can finish your profile after this.">
       <form onSubmit={submit} noValidate>
-        <Field label="First name" error={errors.firstName}>
-          <Input autoComplete="given-name" value={form.firstName} onChange={(event) => set("firstName", event.target.value)} />
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="First name">
+            <Input autoComplete="given-name" placeholder="Alex" value={form.firstName} onChange={(event) => set("firstName", event.target.value)} />
+          </Field>
+          <Field label="Last name">
+            <Input autoComplete="family-name" placeholder="Morgan" value={form.lastName} onChange={(event) => set("lastName", event.target.value)} />
+          </Field>
+        </div>
+        <Field label="Email">
+          <Input type="email" autoComplete="email" inputMode="email" placeholder="you@club.com" value={form.email} onChange={(event) => set("email", event.target.value)} />
         </Field>
-        <Field label="Last name" error={errors.lastName}>
-          <Input autoComplete="family-name" value={form.lastName} onChange={(event) => set("lastName", event.target.value)} />
+        <Field label="Mobile">
+          <Input type="tel" autoComplete="tel" inputMode="tel" placeholder="(555) 000-0000" value={form.phone} onChange={(event) => set("phone", event.target.value)} />
         </Field>
-        <Field label="Email" error={errors.email}>
-          <Input type="email" autoComplete="email" value={form.email} onChange={(event) => set("email", event.target.value)} />
-        </Field>
-        <Field label="Mobile" error={errors.phone}>
-          <Input type="tel" autoComplete="tel" value={form.phone} onChange={(event) => set("phone", event.target.value)} />
-        </Field>
-        <PasswordField label="Password" autoComplete="new-password" value={form.password} onChange={(event) => set("password", event.target.value)} error={errors.password} />
-        <PasswordField label="Confirm password" autoComplete="new-password" value={form.confirm} onChange={(event) => set("confirm", event.target.value)} error={errors.confirm} />
-        <label className="mb-4 flex items-start gap-3 type-small text-foreground">
-          <input type="checkbox" className="mt-1 h-5 w-5" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} />
+        <PasswordField label="Password" autoComplete="new-password" placeholder="Password" value={form.password} onChange={(event) => set("password", event.target.value)} />
+        <PasswordField label="Confirm password" autoComplete="new-password" placeholder="Repeat password" value={form.confirm} onChange={(event) => set("confirm", event.target.value)} />
+        <label className="mb-5 flex items-start gap-3 type-small text-foreground">
+          <input type="checkbox" className="mt-0.5 h-5 w-5 accent-primary" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} />
           <span>
-            I agree to the <Link to="/profile/terms" className="underline">Terms</Link> and <Link to="/profile/privacy-policy" className="underline">Privacy Policy</Link>.
+            I agree to the <Link to="/profile/terms" className="font-semibold underline">Terms</Link> and <Link to="/profile/privacy-policy" className="font-semibold underline">Privacy Policy</Link>.
           </span>
         </label>
-        {errors.agreed && <p className="mb-3 type-helper text-danger">{errors.agreed}</p>}
         <Button type="submit" full loading={loading}>Create account</Button>
       </form>
+      <p className="mt-5 text-center type-small text-muted-foreground">
+        Already coaching here?{" "}
+        <Link to="/login" className="font-semibold text-foreground">Sign in</Link>
+      </p>
     </AuthShell>
   );
 }
@@ -242,23 +240,24 @@ export function ForgotPasswordScreen() {
   const { requestOtp } = useCoach();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (!isEmail(email)) return setError("Enter the email on your coach account.");
     const result = requestOtp(email, "reset");
-    if (!result.ok) return setError("No coach account uses that email.");
+    if (!result.ok) {
+      toast("No coach account uses that email.");
+      return;
+    }
     navigate({ to: "/otp", search: { purpose: "reset", email: email.trim().toLowerCase() } });
   }
 
   return (
-    <AuthShell title="Reset password" subtitle="We will ask for a verification code next. No email is sent in this preview.">
+    <AuthShell title="Reset your password" subtitle="Enter the email on your coach account. This preview does not send a message.">
       <form onSubmit={submit} noValidate>
-        <Field label="Email" error={error}>
-          <Input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+        <Field label="Email">
+          <Input type="email" autoComplete="email" inputMode="email" placeholder="you@club.com" value={email} onChange={(event) => setEmail(event.target.value)} />
         </Field>
-        <Button type="submit" full>Continue</Button>
+        <Button type="submit" full>Send code</Button>
       </form>
     </AuthShell>
   );
@@ -267,8 +266,8 @@ export function ForgotPasswordScreen() {
 export function VerifyEmailScreen({ email }: { email: string }) {
   const navigate = useNavigate();
   return (
-    <AuthShell title="Check your email" subtitle={`A verification step is ready for ${email || "your email"}. Nothing is sent from a server in this preview.`}>
-      <p className="type-body text-muted-foreground">Use the sample code on the next screen to verify this coach account.</p>
+    <AuthShell title="Verify your email" subtitle={`The next step is ready for ${email || "your email"}. Nothing is sent in this preview.`}>
+      <p className="type-body text-muted-foreground">Enter the sample code on the next screen to open your coach account.</p>
       <div className="mt-6">
         <Button full onClick={() => navigate({ to: "/otp", search: { purpose: "verify", email } })}>
           Enter code
@@ -282,29 +281,36 @@ export function OtpScreen({ email, purpose }: { email: string; purpose: "verify"
   const { verifyOtp, requestOtp } = useCoach();
   const navigate = useNavigate();
   const [digits, setDigits] = useState(["", "", "", "", "", ""]);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   function update(index: number, value: string) {
-    const clean = value.replace(/\D/g, "").slice(-1);
+    const clean = value.replace(/\D/g, "");
+    if (clean.length > 1) {
+      const next = [...digits];
+      clean.slice(0, 6 - index).split("").forEach((char, offset) => {
+        next[index + offset] = char;
+      });
+      setDigits(next);
+      document.getElementById(`otp-${Math.min(5, index + clean.length)}`)?.focus();
+      return;
+    }
     const next = [...digits];
     next[index] = clean;
     setDigits(next);
-    if (clean) {
-      const input = document.getElementById(`otp-${index + 1}`) as HTMLInputElement | null;
-      input?.focus();
-    }
+    if (clean) document.getElementById(`otp-${index + 1}`)?.focus();
   }
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
     const code = digits.join("");
-    if (code.length < 6) return setError("Enter the 6-digit code.");
     setLoading(true);
     window.setTimeout(() => {
       const result = verifyOtp(code);
       setLoading(false);
-      if (!result.ok) return setError("That code is not valid.");
+      if (!result.ok) {
+        toast("That code was not accepted.");
+        return;
+      }
       toast.success(result.purpose === "verify" ? "Email verified" : "Code accepted");
       if (result.purpose === "verify") navigate({ to: "/auth-success", search: { next: "setup", title: "Email verified" } });
       else navigate({ to: "/reset-password" });
@@ -312,9 +318,9 @@ export function OtpScreen({ email, purpose }: { email: string; purpose: "verify"
   }
 
   return (
-    <AuthShell title="Enter the code" subtitle={`For ${email || "your coach email"}. ${purpose === "reset" ? "This resets your password." : "This verifies your email."}`}>
+    <AuthShell title="Enter your code" subtitle={`${email || "Your coach email"}. ${purpose === "reset" ? "Then choose a new password." : "This confirms your email."}`}>
       <form onSubmit={submit}>
-        <div className="mb-4 flex justify-between gap-2" role="group" aria-label="Verification code">
+        <div className="mb-5 flex justify-between gap-2" role="group" aria-label="Verification code">
           {digits.map((digit, index) => (
             <input
               key={index}
@@ -324,12 +330,16 @@ export function OtpScreen({ email, purpose }: { email: string; purpose: "verify"
               aria-label={`Digit ${index + 1}`}
               value={digit}
               onChange={(event) => update(index, event.target.value)}
-              className="h-14 w-full rounded-xl border border-border bg-card text-center text-xl font-semibold text-foreground"
+              onKeyDown={(event) => {
+                if (event.key === "Backspace" && !digit && index > 0) {
+                  document.getElementById(`otp-${index - 1}`)?.focus();
+                }
+              }}
+              className="h-14 w-full rounded-2xl border border-border bg-card text-center text-xl font-semibold text-foreground outline-none focus:border-primary"
             />
           ))}
         </div>
-        {error && <p className="mb-3 type-helper text-danger">{error}</p>}
-        <p className="mb-4 type-small text-muted-foreground">Sample code: {SAMPLE_OTP}. No message is sent.</p>
+        <p className="mb-5 type-small text-muted-foreground">Sample code {SAMPLE_OTP}. No message is sent.</p>
         <Button type="submit" full loading={loading}>Verify</Button>
       </form>
       <button
@@ -347,28 +357,26 @@ export function OtpScreen({ email, purpose }: { email: string; purpose: "verify"
 }
 
 export function ResetPasswordScreen() {
-  const { data, resetPassword } = useCoach();
+  const { resetPassword } = useCoach();
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState("");
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
-    const issue = passwordIssue(password);
-    if (issue) return setError(issue);
-    if (password !== confirm) return setError("Passwords do not match.");
-    if (!data.pendingAuth?.verified) return setError("Verify the code before choosing a new password.");
     const ok = resetPassword(password);
-    if (!ok) return setError("The reset step expired. Request a new code.");
+    if (!ok) {
+      toast("Request a new code, then choose a password.");
+      return;
+    }
     navigate({ to: "/password-updated" });
   }
 
   return (
-    <AuthShell title="Choose a new password" subtitle="Use at least 8 characters and one number.">
+    <AuthShell title="Choose a new password" subtitle="You’ll use this the next time you sign in.">
       <form onSubmit={submit} noValidate>
-        <PasswordField label="New password" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} />
-        <PasswordField label="Confirm password" autoComplete="new-password" value={confirm} onChange={(event) => setConfirm(event.target.value)} error={error} />
+        <PasswordField label="New password" autoComplete="new-password" placeholder="New password" value={password} onChange={(event) => setPassword(event.target.value)} />
+        <PasswordField label="Confirm password" autoComplete="new-password" placeholder="Repeat password" value={confirm} onChange={(event) => setConfirm(event.target.value)} />
         <Button type="submit" full>Update password</Button>
       </form>
     </AuthShell>

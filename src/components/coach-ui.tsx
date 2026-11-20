@@ -22,9 +22,7 @@ const TABS = [
 
 export function Logo({ className, wide = false }: { className?: string; wide?: boolean }) {
   return (
-    <span className={cn("inline-flex items-center rounded-xl bg-black px-2.5 py-1.5", className)}>
-      <img src={logo} alt="SpotMyRoster" className={cn("w-auto", wide ? "h-14" : "h-8")} />
-    </span>
+    <img src={logo} alt="SpotMyRoster" className={cn("w-auto", wide ? "h-16" : "h-8", className)} />
   );
 }
 

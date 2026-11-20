@@ -5,7 +5,7 @@ import { Logo, AppFrame, ConfirmDialog, PersonAvatar } from "@/components/coach-
 import { LanguagePicker, type LanguageId } from "@/components/LanguagePicker";
 import { Button, Field, Header, Input, Row, Select, Textarea } from "@/components/kit";
 import { PasswordField } from "@/components/AuthShell";
-import { passwordIssue, phoneIssue, US_STATES } from "@/lib/format";
+import { US_STATES } from "@/lib/format";
 import { NOTICE_CATEGORIES, SPORTS, type Coach } from "@/lib/models";
 import { useCoach } from "@/lib/store";
 
@@ -97,13 +97,8 @@ export function EditProfileScreen() {
     sports: user?.sports ?? [],
     photoUrl: user?.photoUrl,
   });
-  const [error, setError] = useState("");
-
   function save(event: FormEvent) {
     event.preventDefault();
-    if (!form.firstName.trim() || !form.lastName.trim()) return setError("Enter your name.");
-    const phone = phoneIssue(form.phone);
-    if (phone) return setError(phone);
     updateProfile({
       firstName: form.firstName.trim(),
       lastName: form.lastName.trim(),
@@ -158,7 +153,6 @@ export function EditProfileScreen() {
             <option value="phone">Phone</option>
           </Select>
         </Field>
-        {error && <p className="mb-3 type-helper text-danger">{error}</p>}
         <Button type="submit" full>Save</Button>
       </form>
     </AppFrame>
@@ -170,15 +164,14 @@ export function PasswordScreen() {
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState("");
   function save(event: FormEvent) {
     event.preventDefault();
-    const issue = passwordIssue(next);
-    if (issue) return setError(issue);
-    if (next !== confirm) return setError("Passwords do not match.");
-    if (!changePassword(current, next)) return setError("Current password is incorrect.");
+    if (!changePassword(current, next)) {
+      toast("Current password was not accepted.");
+      return;
+    }
     toast.success("Password changed");
-    setCurrent(""); setNext(""); setConfirm(""); setError("");
+    setCurrent(""); setNext(""); setConfirm("");
   }
   return (
     <AppFrame>
@@ -186,7 +179,7 @@ export function PasswordScreen() {
       <form className="px-5" onSubmit={save}>
         <PasswordField label="Current password" value={current} onChange={(event) => setCurrent(event.target.value)} />
         <PasswordField label="New password" value={next} onChange={(event) => setNext(event.target.value)} />
-        <PasswordField label="Confirm password" value={confirm} onChange={(event) => setConfirm(event.target.value)} error={error} />
+        <PasswordField label="Confirm password" value={confirm} onChange={(event) => setConfirm(event.target.value)} />
         <Button type="submit" full>Update password</Button>
       </form>
     </AppFrame>
@@ -236,7 +229,7 @@ export function CertificationsScreen() {
         </ul>
         <div className="mt-4 flex gap-2">
           <Input value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Credential name" aria-label="Credential" />
-          <Button type="button" onClick={() => { if (!draft.trim()) return; setItems([...items, draft.trim()]); setDraft(""); }}>Add</Button>
+          <Button type="button" onClick={() => { setItems([...items, draft.trim()]); setDraft(""); }}>Add</Button>
         </div>
         <div className="mt-4">
           <Button full onClick={() => { updateProfile({ certifications: items }); toast.success("Certifications saved"); }}>Save</Button>

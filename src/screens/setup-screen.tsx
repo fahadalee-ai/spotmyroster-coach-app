@@ -28,7 +28,6 @@ export function SetupScreen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState<SetupDraft>(emptyDraft());
-  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!ready) return;
@@ -61,11 +60,6 @@ export function SetupScreen() {
   }
 
   function next() {
-    if (step === 0 && (!draft.firstName.trim() || !draft.lastName.trim())) return setError("Enter your name.");
-    if (step === 1 && draft.sports.length === 0) return setError("Choose at least one sport.");
-    if (step === 1 && (!draft.years || Number(draft.years) < 0)) return setError("Enter years of coaching.");
-    if (step === 2 && (!draft.organization.trim() || !draft.city.trim())) return setError("Enter your club and city.");
-    setError("");
     if (step < 3) setStep((value) => value + 1);
     else {
       completeSetup(draft);
@@ -185,7 +179,6 @@ export function SetupScreen() {
           </>
         )}
       </div>
-      {error && <p className="mb-3 type-helper text-danger">{error}</p>}
       <div className="mt-2 grid grid-cols-2 gap-3">
         <Button variant="outline" type="button" disabled={step === 0} onClick={() => setStep((value) => Math.max(0, value - 1))}>
           Back

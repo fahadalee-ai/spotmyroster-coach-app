@@ -78,15 +78,9 @@ export function NeedFormScreen({ needId }: { needId?: string }) {
     },
   );
   const [position, setPosition] = useState("");
-  const [error, setError] = useState("");
-
   function save(event: FormEvent) {
     event.preventDefault();
     const positions = form.positions.length ? form.positions : position.trim() ? [position.trim()] : [];
-    if (!form.teamId || positions.length === 0 || !form.deadline) {
-      setError("Choose a team, a position, and a deadline.");
-      return;
-    }
     saveNeed({ ...form, positions, city: form.city.trim() });
     toast.success(existing ? "Opening updated" : "Opening posted");
     navigate({ to: "/needs/$needId", params: { needId: form.id } });
@@ -108,7 +102,6 @@ export function NeedFormScreen({ needId }: { needId?: string }) {
           <div className="flex gap-2">
             <Input value={position} onChange={(event) => setPosition(event.target.value)} placeholder="Shortstop" />
             <Button type="button" variant="outline" onClick={() => {
-              if (!position.trim()) return;
               setForm({ ...form, positions: [...form.positions, position.trim()] });
               setPosition("");
             }}>Add</Button>
@@ -141,7 +134,6 @@ export function NeedFormScreen({ needId }: { needId?: string }) {
         <Field label="Deadline"><Input type="date" value={form.deadline} onChange={(event) => setForm({ ...form, deadline: event.target.value })} /></Field>
         <Field label="Requirements"><Textarea value={form.requirements} onChange={(event) => setForm({ ...form, requirements: event.target.value })} /></Field>
         <Field label="Description"><Textarea value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} /></Field>
-        {error && <p className="mb-3 type-helper text-danger">{error}</p>}
         <Button type="submit" full>Save opening</Button>
       </form>
     </AppFrame>

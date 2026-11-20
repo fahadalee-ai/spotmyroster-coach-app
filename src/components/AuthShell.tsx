@@ -1,6 +1,7 @@
 import { useCanGoBack, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, Eye, EyeOff, Lock } from "lucide-react";
 import { useState, type InputHTMLAttributes, type ReactNode } from "react";
+import logo from "@/img/logo.png";
 import { cn } from "@/lib/utils";
 import { Field, inputClass } from "@/components/kit";
 
@@ -21,22 +22,30 @@ export function AuthShell({
   const canGoBack = useCanGoBack();
 
   return (
-    <div className="relative min-h-dvh bg-background px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))]">
-      {showBack && (
-        <button
-          type="button"
-          aria-label="Go back"
-          onClick={() => (canGoBack ? router.history.back() : router.navigate({ to: "/" }))}
-          className="mb-6 flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-card text-foreground"
-        >
-          <ArrowLeft size={18} strokeWidth={2} />
-        </button>
-      )}
-
-      <h1 className="text-3xl font-semibold tracking-tight text-foreground">{title}</h1>
-      {subtitle && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{subtitle}</p>}
-      <div className="mt-6">{children}</div>
-      {footer}
+    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
+      <div aria-hidden className="pointer-events-none absolute -top-28 left-1/2 h-72 w-[30rem] -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" />
+      <header className="relative flex items-center justify-between px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
+        {showBack ? (
+          <button
+            type="button"
+            aria-label="Go back"
+            onClick={() => (canGoBack ? router.history.back() : router.navigate({ to: "/" }))}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/80 text-foreground"
+          >
+            <ArrowLeft size={18} strokeWidth={2} />
+          </button>
+        ) : (
+          <span className="h-11 w-11" />
+        )}
+        <img src={logo} alt="" className="h-8 w-auto" />
+        <span className="h-11 w-11" />
+      </header>
+      <div className="relative flex flex-1 flex-col px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+        <h1 className="type-display mt-8 text-foreground">{title}</h1>
+        {subtitle && <p className="mt-2 max-w-sm type-body text-muted-foreground">{subtitle}</p>}
+        <div className="mt-8 flex-1">{children}</div>
+        {footer}
+      </div>
     </div>
   );
 }
@@ -58,12 +67,11 @@ export function AuthInput({
 
 export function PasswordField({
   label,
-  error,
   ...props
-}: Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & { label: string; error?: string }) {
+}: Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & { label: string }) {
   const [show, setShow] = useState(false);
   return (
-    <Field label={label} error={error}>
+    <Field label={label}>
       <div className="relative">
         <AuthInput
           {...props}

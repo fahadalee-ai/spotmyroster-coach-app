@@ -103,7 +103,6 @@ export function ChatDetailScreen({ conversationId }: { conversationId: string })
           className="fixed bottom-0 left-1/2 flex w-full max-w-[480px] -translate-x-1/2 gap-2 border-t border-border bg-background p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
           onSubmit={(event) => {
             event.preventDefault();
-            if (!text.trim()) return;
             sendMessage(conversation.id, text.trim());
             setText("");
           }}

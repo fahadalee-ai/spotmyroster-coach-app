@@ -81,18 +81,8 @@ export function TeamFormScreen({ teamId }: { teamId?: string }) {
       archived: false,
     },
   );
-  const [error, setError] = useState("");
-
   function save(event: FormEvent) {
     event.preventDefault();
-    if (!form.name.trim() || !form.city.trim() || !form.season.trim()) {
-      setError("Name, city, and season are required.");
-      return;
-    }
-    if (form.capacity < 1) {
-      setError("Capacity needs at least one spot.");
-      return;
-    }
     saveTeam({ ...form, name: form.name.trim(), city: form.city.trim() });
     toast.success(existing ? "Team updated" : "Team created");
     navigate({ to: "/teams/$teamId", params: { teamId: form.id } });
@@ -133,7 +123,6 @@ export function TeamFormScreen({ teamId }: { teamId?: string }) {
           <Input value={form.league} onChange={(event) => setForm({ ...form, league: event.target.value })} />
         </Field>
         <Field label="Description"><Textarea value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} /></Field>
-        {error && <p className="mb-3 type-helper text-danger">{error}</p>}
         <Button type="submit" full>{existing ? "Save changes" : "Create team"}</Button>
       </form>
     </AppFrame>
@@ -258,10 +247,6 @@ export function RosterScreen({ teamId }: { teamId: string }) {
   function save(event: FormEvent) {
     event.preventDefault();
     if (!editing) return;
-    if (!editing.name.trim() || !editing.position.trim()) {
-      toast.error("Name and position are required.");
-      return;
-    }
     saveRosterMember(editing);
     toast.success("Roster updated");
     setEditing(null);

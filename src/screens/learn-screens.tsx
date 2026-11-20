@@ -181,7 +181,7 @@ export function CourseScreen({ courseId }: { courseId: string }) {
         <Field label="Your review">
           <Textarea value={review} onChange={(event) => setReview(event.target.value)} />
         </Field>
-        <Button variant="outline" onClick={() => { if (!rating) { toast.error("Choose a rating."); return; } rateCourse(course.id, rating, review); toast.success("Review saved on this device"); }}>Save review</Button>
+        <Button variant="outline" onClick={() => { rateCourse(course.id, rating, review); toast.success("Review saved on this device"); }}>Save review</Button>
         <p className="type-helper text-dim">A certificate of completion is not offered for this sample course.</p>
       </div>
     </AppFrame>

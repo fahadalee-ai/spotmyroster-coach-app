@@ -129,14 +129,8 @@ export function EventFormScreen({ eventId }: { eventId?: string }) {
       rsvps: [],
     },
   );
-  const [error, setError] = useState("");
-
   function save(event: FormEvent) {
     event.preventDefault();
-    if (!form.title.trim() || !form.date || !form.time || !form.address.trim() || !form.city.trim()) {
-      setError("Title, date, time, address, and city are required.");
-      return;
-    }
     saveEvent({ ...form, title: form.title.trim(), address: form.address.trim(), city: form.city.trim() });
     toast.success(existing ? "Event updated" : "Event created");
     navigate({ to: "/events/$eventId", params: { eventId: form.id } });
@@ -159,7 +153,7 @@ export function EventFormScreen({ eventId }: { eventId?: string }) {
         </div>
         <Field label="Address"><Input value={form.address} onChange={(event) => setForm({ ...form, address: event.target.value })} /></Field>
         <Field label="City"><Input value={form.city} onChange={(event) => setForm({ ...form, city: event.target.value })} /></Field>
-        <Field label="State"><Input value={form.state} maxLength={2} onChange={(event) => setForm({ ...form, state: event.target.value.toUpperCase() })} /></Field>
+        <Field label="State"><Input value={form.state} onChange={(event) => setForm({ ...form, state: event.target.value.toUpperCase() })} /></Field>
         <Field label="Team">
           <Select value={form.teamId} onChange={(event) => setForm({ ...form, teamId: event.target.value })}>
             {data.teams.map((team) => <option key={team.id} value={team.id}>{team.name}</option>)}
@@ -175,7 +169,6 @@ export function EventFormScreen({ eventId }: { eventId?: string }) {
         <Field label="Description" hint="Fees are omitted until SpotMyRoster provides them.">
           <Textarea value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} />
         </Field>
-        {error && <p className="mb-3 type-helper text-danger">{error}</p>}
         <Button type="submit" full>Save event</Button>
       </form>
     </AppFrame>
