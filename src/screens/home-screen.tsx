@@ -57,6 +57,12 @@ export function HomeScreen() {
                 <p className="mt-1 type-small">Across {teams.length} active {teams.length === 1 ? "team" : "teams"}</p>
               </Link>
 
+              <Link to="/listings" className="mt-4 block rounded-2xl border border-border bg-card p-4">
+                <p className="type-caption text-dim">Listings</p>
+                <p className="type-sub mt-1 text-foreground">Tryouts, roster openings, and subs</p>
+              </Link>
+              <Link to="/coach" className="mt-2 block type-small font-semibold text-foreground underline">Coach menu</Link>
+
               <div className="mt-4 grid grid-cols-3 gap-2">
                 <Quick to="/needs/new" icon={<Megaphone size={18} />} label="Post need" />
                 <Quick to="/recruit" icon={<UserSearch size={18} />} label="Find athletes" />

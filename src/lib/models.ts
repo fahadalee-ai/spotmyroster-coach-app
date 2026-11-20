@@ -252,6 +252,43 @@ export type SetupDraft = {
   certifications: string;
 };
 
+export type ListingKind = "tryout" | "roster" | "sub";
+
+export type ListingStatus = "Active" | "Paused";
+
+export type Listing = {
+  id: string;
+  kind: ListingKind;
+  title: string;
+  teamId: string;
+  sport: string;
+  status: ListingStatus;
+  boostedUntil: string | null;
+  date: string;
+  time: string;
+  endTime: string;
+  address: string;
+  city: string;
+  state: string;
+  positions: string[];
+  description: string;
+  feeNote: string;
+  mediaName: string;
+  spots: number;
+  ageGroup: string;
+};
+
+export type CoachPlanId = "premium" | "unlimited";
+
+export type PaymentRecord = {
+  id: string;
+  title: string;
+  detail: string;
+  amount: string;
+  status: "Paid" | "Failed";
+  at: string;
+};
+
 export type AppData = {
   onboarded: boolean;
   users: Coach[];
@@ -269,6 +306,34 @@ export type AppData = {
   notifications: Notice[];
   recentSearches: string[];
   reports: ReportRecord[];
+  listings: Listing[];
+  payments: PaymentRecord[];
+  planId: CoachPlanId;
+  boostsRemaining: number;
+  renewalFailed: boolean;
+};
+
+export const PLAN_COPY: Record<CoachPlanId, { name: string; summary: string; features: string[] }> = {
+  premium: {
+    name: "Coach Premium",
+    summary: "One complimentary featured listing boost is included.",
+    features: [
+      "1 complimentary listing boost",
+      "Featured higher in athlete and parent searches",
+      "Advertise camps, private lessons, and training sessions",
+      "Boost a listing for $10 after the complimentary boost is used",
+    ],
+  },
+  unlimited: {
+    name: "Coach Premium Unlimited",
+    summary: "Everything in Coach Premium, plus unlimited listings and boosts.",
+    features: [
+      "Everything in Coach Premium",
+      "Unlimited listings",
+      "Unlimited featured listing boosts",
+      "Featured higher in athlete and parent searches for 30 days",
+    ],
+  },
 };
 
 export const NOTICE_CATEGORIES: NoticeCategory[] = ["Applications", "Messages", "Events", "Roster", "System"];

@@ -4,8 +4,10 @@ import type {
   Application,
   Athlete,
   Coach,
+  CoachPlanId,
   Conversation,
   Course,
+  Listing,
   PipelineStage,
   RosterMember,
   RosterNeed,
@@ -26,11 +28,22 @@ type Action =
   | { type: "set-users"; users: Coach[] }
   | { type: "update-user"; id: string; patch: Partial<Coach> };
 
+function withCoachData(data: AppData): AppData {
+  return {
+    ...data,
+    listings: data.listings ?? [],
+    payments: data.payments ?? [],
+    planId: data.planId ?? "premium",
+    boostsRemaining: data.boostsRemaining ?? 1,
+    renewalFailed: data.renewalFailed ?? false,
+  };
+}
+
 function reducer(state: AppData, action: Action): AppData {
   switch (action.type) {
     case "hydrate":
     case "replace":
-      return action.data;
+      return withCoachData(action.data);
     case "patch":
       return { ...state, ...action.patch };
     case "set-users":
@@ -118,6 +131,12 @@ type CoachApi = {
   setApplication: (id: string, patch: Partial<Application>) => void;
   saveEvent: (event: SportEvent) => void;
   setEventStatus: (id: string, status: SportEvent["status"]) => void;
+  saveListing: (listing: Listing) => void;
+  setListingStatus: (id: string, status: Listing["status"]) => void;
+  removeListing: (id: string) => void;
+  boostListing: (id: string, paid: boolean) => void;
+  setPlan: (planId: CoachPlanId) => void;
+  resolveRenewal: () => void;
   setRsvp: (eventId: string, rsvpId: string, status: SportEvent["rsvps"][number]["status"]) => void;
   enroll: (courseId: string) => void;
   completeLesson: (courseId: string, lessonId: string) => void;
@@ -410,6 +429,50 @@ export function AppProvider({ children }: { children: ReactNode }) {
           patch: { events: current().events.map((item) => (item.id === id ? { ...item, status } : item)) },
         });
       },
+      saveListing: (listing) => {
+        const listings = current().listings.some((item) => item.id === listing.id)
+          ? current().listings.map((item) => (item.id === listing.id ? listing : item))
+          : [listing, ...current().listings];
+        dispatch({ type: "patch", patch: { listings } });
+      },
+      setListingStatus: (id, status) => {
+        dispatch({
+          type: "patch",
+          patch: { listings: current().listings.map((item) => (item.id === id ? { ...item, status } : item)) },
+        });
+      },
+      removeListing: (id) => {
+        dispatch({ type: "patch", patch: { listings: current().listings.filter((item) => item.id !== id) } });
+      },
+      boostListing: (id, paid) => {
+        const until = new Date();
+        until.setDate(until.getDate() + 30);
+        const listings = current().listings.map((item) =>
+          item.id === id ? { ...item, boostedUntil: until.toISOString(), status: "Active" as const } : item,
+        );
+        const payments = paid
+          ? [
+              {
+                id: newId("pay"),
+                title: "Listing boost",
+                detail: "Featured higher in athlete and parent searches for 30 days.",
+                amount: "$10",
+                status: "Paid" as const,
+                at: new Date().toISOString(),
+              },
+              ...current().payments,
+            ]
+          : current().payments;
+        const boostsRemaining = paid || current().planId === "unlimited" ? current().boostsRemaining : Math.max(0, current().boostsRemaining - 1);
+        dispatch({ type: "patch", patch: { listings, payments, boostsRemaining } });
+      },
+      setPlan: (planId) => {
+        dispatch({
+          type: "patch",
+          patch: { planId, boostsRemaining: planId === "unlimited" ? current().boostsRemaining : current().boostsRemaining || 1 },
+        });
+      },
+      resolveRenewal: () => dispatch({ type: "patch", patch: { renewalFailed: false } }),
       setRsvp: (eventId, rsvpId, status) => {
         dispatch({
           type: "patch",

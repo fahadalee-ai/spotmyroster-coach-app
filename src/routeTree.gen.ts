@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as AuthSuccessRouteImport } from './routes/auth-success'
+import { Route as CoachRouteImport } from './routes/coach'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as LoginRouteImport } from './routes/login'
@@ -31,9 +33,16 @@ import { Route as EventsCalendarRouteImport } from './routes/events/calendar'
 import { Route as EventsNewRouteImport } from './routes/events/new'
 import { Route as LearnIndexRouteImport } from './routes/learn/index'
 import { Route as LearnMyRouteImport } from './routes/learn/my'
+import { Route as ListingsIndexRouteImport } from './routes/listings/index'
+import { Route as ListingsPostRouteImport } from './routes/listings/post'
+import { Route as ListingsRosterRouteImport } from './routes/listings/roster'
+import { Route as ListingsSubRouteImport } from './routes/listings/sub'
+import { Route as ListingsTryoutRouteImport } from './routes/listings/tryout'
 import { Route as NeedsIndexRouteImport } from './routes/needs/index'
 import { Route as NeedsNeedIdRouteImport } from './routes/needs/$needId'
 import { Route as NeedsNewRouteImport } from './routes/needs/new'
+import { Route as PaymentsIndexRouteImport } from './routes/payments/index'
+import { Route as PaymentsPaymentIdRouteImport } from './routes/payments/$paymentId'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
 import { Route as ProfileAboutRouteImport } from './routes/profile/about'
 import { Route as ProfileBlockedRouteImport } from './routes/profile/blocked'
@@ -50,11 +59,17 @@ import { Route as ProfilePrivacyPolicyRouteImport } from './routes/profile/priva
 import { Route as ProfileTermsRouteImport } from './routes/profile/terms'
 import { Route as ProfileThemeRouteImport } from './routes/profile/theme'
 import { Route as RecruitIndexRouteImport } from './routes/recruit/index'
+import { Route as SubscriptionIndexRouteImport } from './routes/subscription/index'
+import { Route as SubscriptionManageRouteImport } from './routes/subscription/manage'
 import { Route as TeamsIndexRouteImport } from './routes/teams/index'
 import { Route as TeamsTeamIdRouteImport } from './routes/teams/$teamId'
 import { Route as TeamsNewRouteImport } from './routes/teams/new'
 import { Route as EventsEventIdEditRouteImport } from './routes/events/$eventId/edit'
 import { Route as LearnCoursesCourseIdRouteImport } from './routes/learn/courses/$courseId'
+import { Route as ListingsListingIdIndexRouteImport } from './routes/listings/$listingId/index'
+import { Route as ListingsListingIdBoostRouteImport } from './routes/listings/$listingId/boost'
+import { Route as ListingsListingIdEditRouteImport } from './routes/listings/$listingId/edit'
+import { Route as ListingsListingIdPreviewRouteImport } from './routes/listings/$listingId/preview'
 import { Route as NeedsNeedIdEditRouteImport } from './routes/needs/$needId/edit'
 import { Route as RecruitApplicationsIndexRouteImport } from './routes/recruit/applications/index'
 import { Route as RecruitApplicationsApplicationIdRouteImport } from './routes/recruit/applications/$applicationId'
@@ -69,9 +84,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthSuccessRoute = AuthSuccessRouteImport.update({
   id: '/auth-success',
   path: '/auth-success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoachRoute = CoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -174,6 +199,31 @@ const LearnMyRoute = LearnMyRouteImport.update({
   path: '/learn/my',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ListingsIndexRoute = ListingsIndexRouteImport.update({
+  id: '/listings/',
+  path: '/listings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingsPostRoute = ListingsPostRouteImport.update({
+  id: '/listings/post',
+  path: '/listings/post',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingsRosterRoute = ListingsRosterRouteImport.update({
+  id: '/listings/roster',
+  path: '/listings/roster',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingsSubRoute = ListingsSubRouteImport.update({
+  id: '/listings/sub',
+  path: '/listings/sub',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingsTryoutRoute = ListingsTryoutRouteImport.update({
+  id: '/listings/tryout',
+  path: '/listings/tryout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NeedsIndexRoute = NeedsIndexRouteImport.update({
   id: '/needs/',
   path: '/needs/',
@@ -187,6 +237,16 @@ const NeedsNeedIdRoute = NeedsNeedIdRouteImport.update({
 const NeedsNewRoute = NeedsNewRouteImport.update({
   id: '/needs/new',
   path: '/needs/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentsIndexRoute = PaymentsIndexRouteImport.update({
+  id: '/payments/',
+  path: '/payments/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentsPaymentIdRoute = PaymentsPaymentIdRouteImport.update({
+  id: '/payments/$paymentId',
+  path: '/payments/$paymentId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileIndexRoute = ProfileIndexRouteImport.update({
@@ -269,6 +329,16 @@ const RecruitIndexRoute = RecruitIndexRouteImport.update({
   path: '/recruit/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SubscriptionIndexRoute = SubscriptionIndexRouteImport.update({
+  id: '/subscription/',
+  path: '/subscription/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscriptionManageRoute = SubscriptionManageRouteImport.update({
+  id: '/subscription/manage',
+  path: '/subscription/manage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TeamsIndexRoute = TeamsIndexRouteImport.update({
   id: '/teams/',
   path: '/teams/',
@@ -294,6 +364,27 @@ const LearnCoursesCourseIdRoute = LearnCoursesCourseIdRouteImport.update({
   path: '/learn/courses/$courseId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ListingsListingIdIndexRoute = ListingsListingIdIndexRouteImport.update({
+  id: '/listings/$listingId/',
+  path: '/listings/$listingId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingsListingIdBoostRoute = ListingsListingIdBoostRouteImport.update({
+  id: '/listings/$listingId/boost',
+  path: '/listings/$listingId/boost',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingsListingIdEditRoute = ListingsListingIdEditRouteImport.update({
+  id: '/listings/$listingId/edit',
+  path: '/listings/$listingId/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingsListingIdPreviewRoute =
+  ListingsListingIdPreviewRouteImport.update({
+    id: '/listings/$listingId/preview',
+    path: '/listings/$listingId/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const NeedsNeedIdEditRoute = NeedsNeedIdEditRouteImport.update({
   id: '/edit',
   path: '/edit',
@@ -341,7 +432,9 @@ const LearnCoursesCourseIdLessonsLessonIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
   '/auth-success': typeof AuthSuccessRoute
+  '/coach': typeof CoachRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -359,8 +452,13 @@ export interface FileRoutesByFullPath {
   '/events/calendar': typeof EventsCalendarRoute
   '/events/new': typeof EventsNewRoute
   '/learn/my': typeof LearnMyRoute
+  '/listings/post': typeof ListingsPostRoute
+  '/listings/roster': typeof ListingsRosterRoute
+  '/listings/sub': typeof ListingsSubRoute
+  '/listings/tryout': typeof ListingsTryoutRoute
   '/needs/$needId': typeof NeedsNeedIdRouteWithChildren
   '/needs/new': typeof NeedsNewRoute
+  '/payments/$paymentId': typeof PaymentsPaymentIdRoute
   '/profile/about': typeof ProfileAboutRoute
   '/profile/blocked': typeof ProfileBlockedRoute
   '/profile/certifications': typeof ProfileCertificationsRoute
@@ -375,29 +473,39 @@ export interface FileRoutesByFullPath {
   '/profile/privacy-policy': typeof ProfilePrivacyPolicyRoute
   '/profile/terms': typeof ProfileTermsRoute
   '/profile/theme': typeof ProfileThemeRoute
+  '/subscription/manage': typeof SubscriptionManageRoute
   '/teams/$teamId': typeof TeamsTeamIdRouteWithChildren
   '/teams/new': typeof TeamsNewRoute
   '/chat/': typeof ChatIndexRoute
   '/events/': typeof EventsIndexRoute
   '/learn/': typeof LearnIndexRoute
+  '/listings/': typeof ListingsIndexRoute
   '/needs/': typeof NeedsIndexRoute
+  '/payments/': typeof PaymentsIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/recruit/': typeof RecruitIndexRoute
+  '/subscription/': typeof SubscriptionIndexRoute
   '/teams/': typeof TeamsIndexRoute
   '/events/$eventId/edit': typeof EventsEventIdEditRoute
   '/learn/courses/$courseId': typeof LearnCoursesCourseIdRouteWithChildren
+  '/listings/$listingId/boost': typeof ListingsListingIdBoostRoute
+  '/listings/$listingId/edit': typeof ListingsListingIdEditRoute
+  '/listings/$listingId/preview': typeof ListingsListingIdPreviewRoute
   '/needs/$needId/edit': typeof NeedsNeedIdEditRoute
   '/recruit/applications/$applicationId': typeof RecruitApplicationsApplicationIdRoute
   '/recruit/athletes/$athleteId': typeof RecruitAthletesAthleteIdRoute
   '/teams/$teamId/edit': typeof TeamsTeamIdEditRoute
   '/teams/$teamId/preview': typeof TeamsTeamIdPreviewRoute
   '/teams/$teamId/roster': typeof TeamsTeamIdRosterRoute
+  '/listings/$listingId/': typeof ListingsListingIdIndexRoute
   '/recruit/applications/': typeof RecruitApplicationsIndexRoute
   '/learn/courses/$courseId/lessons/$lessonId': typeof LearnCoursesCourseIdLessonsLessonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
   '/auth-success': typeof AuthSuccessRoute
+  '/coach': typeof CoachRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -415,8 +523,13 @@ export interface FileRoutesByTo {
   '/events/calendar': typeof EventsCalendarRoute
   '/events/new': typeof EventsNewRoute
   '/learn/my': typeof LearnMyRoute
+  '/listings/post': typeof ListingsPostRoute
+  '/listings/roster': typeof ListingsRosterRoute
+  '/listings/sub': typeof ListingsSubRoute
+  '/listings/tryout': typeof ListingsTryoutRoute
   '/needs/$needId': typeof NeedsNeedIdRouteWithChildren
   '/needs/new': typeof NeedsNewRoute
+  '/payments/$paymentId': typeof PaymentsPaymentIdRoute
   '/profile/about': typeof ProfileAboutRoute
   '/profile/blocked': typeof ProfileBlockedRoute
   '/profile/certifications': typeof ProfileCertificationsRoute
@@ -431,30 +544,40 @@ export interface FileRoutesByTo {
   '/profile/privacy-policy': typeof ProfilePrivacyPolicyRoute
   '/profile/terms': typeof ProfileTermsRoute
   '/profile/theme': typeof ProfileThemeRoute
+  '/subscription/manage': typeof SubscriptionManageRoute
   '/teams/$teamId': typeof TeamsTeamIdRouteWithChildren
   '/teams/new': typeof TeamsNewRoute
   '/chat': typeof ChatIndexRoute
   '/events': typeof EventsIndexRoute
   '/learn': typeof LearnIndexRoute
+  '/listings': typeof ListingsIndexRoute
   '/needs': typeof NeedsIndexRoute
+  '/payments': typeof PaymentsIndexRoute
   '/profile': typeof ProfileIndexRoute
   '/recruit': typeof RecruitIndexRoute
+  '/subscription': typeof SubscriptionIndexRoute
   '/teams': typeof TeamsIndexRoute
   '/events/$eventId/edit': typeof EventsEventIdEditRoute
   '/learn/courses/$courseId': typeof LearnCoursesCourseIdRouteWithChildren
+  '/listings/$listingId/boost': typeof ListingsListingIdBoostRoute
+  '/listings/$listingId/edit': typeof ListingsListingIdEditRoute
+  '/listings/$listingId/preview': typeof ListingsListingIdPreviewRoute
   '/needs/$needId/edit': typeof NeedsNeedIdEditRoute
   '/recruit/applications/$applicationId': typeof RecruitApplicationsApplicationIdRoute
   '/recruit/athletes/$athleteId': typeof RecruitAthletesAthleteIdRoute
   '/teams/$teamId/edit': typeof TeamsTeamIdEditRoute
   '/teams/$teamId/preview': typeof TeamsTeamIdPreviewRoute
   '/teams/$teamId/roster': typeof TeamsTeamIdRosterRoute
+  '/listings/$listingId': typeof ListingsListingIdIndexRoute
   '/recruit/applications': typeof RecruitApplicationsIndexRoute
   '/learn/courses/$courseId/lessons/$lessonId': typeof LearnCoursesCourseIdLessonsLessonIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
   '/auth-success': typeof AuthSuccessRoute
+  '/coach': typeof CoachRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -472,8 +595,13 @@ export interface FileRoutesById {
   '/events/calendar': typeof EventsCalendarRoute
   '/events/new': typeof EventsNewRoute
   '/learn/my': typeof LearnMyRoute
+  '/listings/post': typeof ListingsPostRoute
+  '/listings/roster': typeof ListingsRosterRoute
+  '/listings/sub': typeof ListingsSubRoute
+  '/listings/tryout': typeof ListingsTryoutRoute
   '/needs/$needId': typeof NeedsNeedIdRouteWithChildren
   '/needs/new': typeof NeedsNewRoute
+  '/payments/$paymentId': typeof PaymentsPaymentIdRoute
   '/profile/about': typeof ProfileAboutRoute
   '/profile/blocked': typeof ProfileBlockedRoute
   '/profile/certifications': typeof ProfileCertificationsRoute
@@ -488,23 +616,31 @@ export interface FileRoutesById {
   '/profile/privacy-policy': typeof ProfilePrivacyPolicyRoute
   '/profile/terms': typeof ProfileTermsRoute
   '/profile/theme': typeof ProfileThemeRoute
+  '/subscription/manage': typeof SubscriptionManageRoute
   '/teams/$teamId': typeof TeamsTeamIdRouteWithChildren
   '/teams/new': typeof TeamsNewRoute
   '/chat/': typeof ChatIndexRoute
   '/events/': typeof EventsIndexRoute
   '/learn/': typeof LearnIndexRoute
+  '/listings/': typeof ListingsIndexRoute
   '/needs/': typeof NeedsIndexRoute
+  '/payments/': typeof PaymentsIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/recruit/': typeof RecruitIndexRoute
+  '/subscription/': typeof SubscriptionIndexRoute
   '/teams/': typeof TeamsIndexRoute
   '/events/$eventId/edit': typeof EventsEventIdEditRoute
   '/learn/courses/$courseId': typeof LearnCoursesCourseIdRouteWithChildren
+  '/listings/$listingId/boost': typeof ListingsListingIdBoostRoute
+  '/listings/$listingId/edit': typeof ListingsListingIdEditRoute
+  '/listings/$listingId/preview': typeof ListingsListingIdPreviewRoute
   '/needs/$needId/edit': typeof NeedsNeedIdEditRoute
   '/recruit/applications/$applicationId': typeof RecruitApplicationsApplicationIdRoute
   '/recruit/athletes/$athleteId': typeof RecruitAthletesAthleteIdRoute
   '/teams/$teamId/edit': typeof TeamsTeamIdEditRoute
   '/teams/$teamId/preview': typeof TeamsTeamIdPreviewRoute
   '/teams/$teamId/roster': typeof TeamsTeamIdRosterRoute
+  '/listings/$listingId/': typeof ListingsListingIdIndexRoute
   '/recruit/applications/': typeof RecruitApplicationsIndexRoute
   '/learn/courses/$courseId/lessons/$lessonId': typeof LearnCoursesCourseIdLessonsLessonIdRoute
 }
@@ -512,7 +648,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/alerts'
     | '/auth-success'
+    | '/coach'
     | '/forgot-password'
     | '/home'
     | '/login'
@@ -530,8 +668,13 @@ export interface FileRouteTypes {
     | '/events/calendar'
     | '/events/new'
     | '/learn/my'
+    | '/listings/post'
+    | '/listings/roster'
+    | '/listings/sub'
+    | '/listings/tryout'
     | '/needs/$needId'
     | '/needs/new'
+    | '/payments/$paymentId'
     | '/profile/about'
     | '/profile/blocked'
     | '/profile/certifications'
@@ -546,29 +689,39 @@ export interface FileRouteTypes {
     | '/profile/privacy-policy'
     | '/profile/terms'
     | '/profile/theme'
+    | '/subscription/manage'
     | '/teams/$teamId'
     | '/teams/new'
     | '/chat/'
     | '/events/'
     | '/learn/'
+    | '/listings/'
     | '/needs/'
+    | '/payments/'
     | '/profile/'
     | '/recruit/'
+    | '/subscription/'
     | '/teams/'
     | '/events/$eventId/edit'
     | '/learn/courses/$courseId'
+    | '/listings/$listingId/boost'
+    | '/listings/$listingId/edit'
+    | '/listings/$listingId/preview'
     | '/needs/$needId/edit'
     | '/recruit/applications/$applicationId'
     | '/recruit/athletes/$athleteId'
     | '/teams/$teamId/edit'
     | '/teams/$teamId/preview'
     | '/teams/$teamId/roster'
+    | '/listings/$listingId/'
     | '/recruit/applications/'
     | '/learn/courses/$courseId/lessons/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/alerts'
     | '/auth-success'
+    | '/coach'
     | '/forgot-password'
     | '/home'
     | '/login'
@@ -586,8 +739,13 @@ export interface FileRouteTypes {
     | '/events/calendar'
     | '/events/new'
     | '/learn/my'
+    | '/listings/post'
+    | '/listings/roster'
+    | '/listings/sub'
+    | '/listings/tryout'
     | '/needs/$needId'
     | '/needs/new'
+    | '/payments/$paymentId'
     | '/profile/about'
     | '/profile/blocked'
     | '/profile/certifications'
@@ -602,29 +760,39 @@ export interface FileRouteTypes {
     | '/profile/privacy-policy'
     | '/profile/terms'
     | '/profile/theme'
+    | '/subscription/manage'
     | '/teams/$teamId'
     | '/teams/new'
     | '/chat'
     | '/events'
     | '/learn'
+    | '/listings'
     | '/needs'
+    | '/payments'
     | '/profile'
     | '/recruit'
+    | '/subscription'
     | '/teams'
     | '/events/$eventId/edit'
     | '/learn/courses/$courseId'
+    | '/listings/$listingId/boost'
+    | '/listings/$listingId/edit'
+    | '/listings/$listingId/preview'
     | '/needs/$needId/edit'
     | '/recruit/applications/$applicationId'
     | '/recruit/athletes/$athleteId'
     | '/teams/$teamId/edit'
     | '/teams/$teamId/preview'
     | '/teams/$teamId/roster'
+    | '/listings/$listingId'
     | '/recruit/applications'
     | '/learn/courses/$courseId/lessons/$lessonId'
   id:
     | '__root__'
     | '/'
+    | '/alerts'
     | '/auth-success'
+    | '/coach'
     | '/forgot-password'
     | '/home'
     | '/login'
@@ -642,8 +810,13 @@ export interface FileRouteTypes {
     | '/events/calendar'
     | '/events/new'
     | '/learn/my'
+    | '/listings/post'
+    | '/listings/roster'
+    | '/listings/sub'
+    | '/listings/tryout'
     | '/needs/$needId'
     | '/needs/new'
+    | '/payments/$paymentId'
     | '/profile/about'
     | '/profile/blocked'
     | '/profile/certifications'
@@ -658,30 +831,40 @@ export interface FileRouteTypes {
     | '/profile/privacy-policy'
     | '/profile/terms'
     | '/profile/theme'
+    | '/subscription/manage'
     | '/teams/$teamId'
     | '/teams/new'
     | '/chat/'
     | '/events/'
     | '/learn/'
+    | '/listings/'
     | '/needs/'
+    | '/payments/'
     | '/profile/'
     | '/recruit/'
+    | '/subscription/'
     | '/teams/'
     | '/events/$eventId/edit'
     | '/learn/courses/$courseId'
+    | '/listings/$listingId/boost'
+    | '/listings/$listingId/edit'
+    | '/listings/$listingId/preview'
     | '/needs/$needId/edit'
     | '/recruit/applications/$applicationId'
     | '/recruit/athletes/$athleteId'
     | '/teams/$teamId/edit'
     | '/teams/$teamId/preview'
     | '/teams/$teamId/roster'
+    | '/listings/$listingId/'
     | '/recruit/applications/'
     | '/learn/courses/$courseId/lessons/$lessonId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlertsRoute: typeof AlertsRoute
   AuthSuccessRoute: typeof AuthSuccessRoute
+  CoachRoute: typeof CoachRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
@@ -699,8 +882,13 @@ export interface RootRouteChildren {
   EventsCalendarRoute: typeof EventsCalendarRoute
   EventsNewRoute: typeof EventsNewRoute
   LearnMyRoute: typeof LearnMyRoute
+  ListingsPostRoute: typeof ListingsPostRoute
+  ListingsRosterRoute: typeof ListingsRosterRoute
+  ListingsSubRoute: typeof ListingsSubRoute
+  ListingsTryoutRoute: typeof ListingsTryoutRoute
   NeedsNeedIdRoute: typeof NeedsNeedIdRouteWithChildren
   NeedsNewRoute: typeof NeedsNewRoute
+  PaymentsPaymentIdRoute: typeof PaymentsPaymentIdRoute
   ProfileAboutRoute: typeof ProfileAboutRoute
   ProfileBlockedRoute: typeof ProfileBlockedRoute
   ProfileCertificationsRoute: typeof ProfileCertificationsRoute
@@ -715,18 +903,26 @@ export interface RootRouteChildren {
   ProfilePrivacyPolicyRoute: typeof ProfilePrivacyPolicyRoute
   ProfileTermsRoute: typeof ProfileTermsRoute
   ProfileThemeRoute: typeof ProfileThemeRoute
+  SubscriptionManageRoute: typeof SubscriptionManageRoute
   TeamsTeamIdRoute: typeof TeamsTeamIdRouteWithChildren
   TeamsNewRoute: typeof TeamsNewRoute
   ChatIndexRoute: typeof ChatIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
   LearnIndexRoute: typeof LearnIndexRoute
+  ListingsIndexRoute: typeof ListingsIndexRoute
   NeedsIndexRoute: typeof NeedsIndexRoute
+  PaymentsIndexRoute: typeof PaymentsIndexRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
   RecruitIndexRoute: typeof RecruitIndexRoute
+  SubscriptionIndexRoute: typeof SubscriptionIndexRoute
   TeamsIndexRoute: typeof TeamsIndexRoute
   LearnCoursesCourseIdRoute: typeof LearnCoursesCourseIdRouteWithChildren
+  ListingsListingIdBoostRoute: typeof ListingsListingIdBoostRoute
+  ListingsListingIdEditRoute: typeof ListingsListingIdEditRoute
+  ListingsListingIdPreviewRoute: typeof ListingsListingIdPreviewRoute
   RecruitApplicationsApplicationIdRoute: typeof RecruitApplicationsApplicationIdRoute
   RecruitAthletesAthleteIdRoute: typeof RecruitAthletesAthleteIdRoute
+  ListingsListingIdIndexRoute: typeof ListingsListingIdIndexRoute
   RecruitApplicationsIndexRoute: typeof RecruitApplicationsIndexRoute
 }
 
@@ -739,11 +935,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth-success': {
       id: '/auth-success'
       path: '/auth-success'
       fullPath: '/auth-success'
       preLoaderRoute: typeof AuthSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coach': {
+      id: '/coach'
+      path: '/coach'
+      fullPath: '/coach'
+      preLoaderRoute: typeof CoachRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -886,6 +1096,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnMyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/listings/': {
+      id: '/listings/'
+      path: '/listings'
+      fullPath: '/listings/'
+      preLoaderRoute: typeof ListingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listings/post': {
+      id: '/listings/post'
+      path: '/listings/post'
+      fullPath: '/listings/post'
+      preLoaderRoute: typeof ListingsPostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listings/roster': {
+      id: '/listings/roster'
+      path: '/listings/roster'
+      fullPath: '/listings/roster'
+      preLoaderRoute: typeof ListingsRosterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listings/sub': {
+      id: '/listings/sub'
+      path: '/listings/sub'
+      fullPath: '/listings/sub'
+      preLoaderRoute: typeof ListingsSubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listings/tryout': {
+      id: '/listings/tryout'
+      path: '/listings/tryout'
+      fullPath: '/listings/tryout'
+      preLoaderRoute: typeof ListingsTryoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/needs/': {
       id: '/needs/'
       path: '/needs'
@@ -905,6 +1150,20 @@ declare module '@tanstack/react-router' {
       path: '/needs/new'
       fullPath: '/needs/new'
       preLoaderRoute: typeof NeedsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payments/': {
+      id: '/payments/'
+      path: '/payments'
+      fullPath: '/payments/'
+      preLoaderRoute: typeof PaymentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payments/$paymentId': {
+      id: '/payments/$paymentId'
+      path: '/payments/$paymentId'
+      fullPath: '/payments/$paymentId'
+      preLoaderRoute: typeof PaymentsPaymentIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile/': {
@@ -1019,6 +1278,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecruitIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/subscription/': {
+      id: '/subscription/'
+      path: '/subscription'
+      fullPath: '/subscription/'
+      preLoaderRoute: typeof SubscriptionIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscription/manage': {
+      id: '/subscription/manage'
+      path: '/subscription/manage'
+      fullPath: '/subscription/manage'
+      preLoaderRoute: typeof SubscriptionManageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/teams/': {
       id: '/teams/'
       path: '/teams'
@@ -1052,6 +1325,34 @@ declare module '@tanstack/react-router' {
       path: '/learn/courses/$courseId'
       fullPath: '/learn/courses/$courseId'
       preLoaderRoute: typeof LearnCoursesCourseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listings/$listingId/': {
+      id: '/listings/$listingId/'
+      path: '/listings/$listingId'
+      fullPath: '/listings/$listingId/'
+      preLoaderRoute: typeof ListingsListingIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listings/$listingId/boost': {
+      id: '/listings/$listingId/boost'
+      path: '/listings/$listingId/boost'
+      fullPath: '/listings/$listingId/boost'
+      preLoaderRoute: typeof ListingsListingIdBoostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listings/$listingId/edit': {
+      id: '/listings/$listingId/edit'
+      path: '/listings/$listingId/edit'
+      fullPath: '/listings/$listingId/edit'
+      preLoaderRoute: typeof ListingsListingIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listings/$listingId/preview': {
+      id: '/listings/$listingId/preview'
+      path: '/listings/$listingId/preview'
+      fullPath: '/listings/$listingId/preview'
+      preLoaderRoute: typeof ListingsListingIdPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/needs/$needId/edit': {
@@ -1167,7 +1468,9 @@ const LearnCoursesCourseIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlertsRoute: AlertsRoute,
   AuthSuccessRoute: AuthSuccessRoute,
+  CoachRoute: CoachRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
@@ -1185,8 +1488,13 @@ const rootRouteChildren: RootRouteChildren = {
   EventsCalendarRoute: EventsCalendarRoute,
   EventsNewRoute: EventsNewRoute,
   LearnMyRoute: LearnMyRoute,
+  ListingsPostRoute: ListingsPostRoute,
+  ListingsRosterRoute: ListingsRosterRoute,
+  ListingsSubRoute: ListingsSubRoute,
+  ListingsTryoutRoute: ListingsTryoutRoute,
   NeedsNeedIdRoute: NeedsNeedIdRouteWithChildren,
   NeedsNewRoute: NeedsNewRoute,
+  PaymentsPaymentIdRoute: PaymentsPaymentIdRoute,
   ProfileAboutRoute: ProfileAboutRoute,
   ProfileBlockedRoute: ProfileBlockedRoute,
   ProfileCertificationsRoute: ProfileCertificationsRoute,
@@ -1201,18 +1509,26 @@ const rootRouteChildren: RootRouteChildren = {
   ProfilePrivacyPolicyRoute: ProfilePrivacyPolicyRoute,
   ProfileTermsRoute: ProfileTermsRoute,
   ProfileThemeRoute: ProfileThemeRoute,
+  SubscriptionManageRoute: SubscriptionManageRoute,
   TeamsTeamIdRoute: TeamsTeamIdRouteWithChildren,
   TeamsNewRoute: TeamsNewRoute,
   ChatIndexRoute: ChatIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
   LearnIndexRoute: LearnIndexRoute,
+  ListingsIndexRoute: ListingsIndexRoute,
   NeedsIndexRoute: NeedsIndexRoute,
+  PaymentsIndexRoute: PaymentsIndexRoute,
   ProfileIndexRoute: ProfileIndexRoute,
   RecruitIndexRoute: RecruitIndexRoute,
+  SubscriptionIndexRoute: SubscriptionIndexRoute,
   TeamsIndexRoute: TeamsIndexRoute,
   LearnCoursesCourseIdRoute: LearnCoursesCourseIdRouteWithChildren,
+  ListingsListingIdBoostRoute: ListingsListingIdBoostRoute,
+  ListingsListingIdEditRoute: ListingsListingIdEditRoute,
+  ListingsListingIdPreviewRoute: ListingsListingIdPreviewRoute,
   RecruitApplicationsApplicationIdRoute: RecruitApplicationsApplicationIdRoute,
   RecruitAthletesAthleteIdRoute: RecruitAthletesAthleteIdRoute,
+  ListingsListingIdIndexRoute: ListingsListingIdIndexRoute,
   RecruitApplicationsIndexRoute: RecruitApplicationsIndexRoute,
 }
 export const routeTree = rootRouteImport

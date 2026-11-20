@@ -35,6 +35,11 @@ export function ProfileScreen() {
   const rows = [
     ["/profile/edit", "Edit profile"],
     ["/profile/password", "Change password"],
+    ["/listings", "Listings"],
+    ["/subscription", "Subscription"],
+    ["/payments", "Payment history"],
+    ["/alerts", "Alerts"],
+    ["/coach", "Coach menu"],
     ["/profile/organization", "Organization"],
     ["/profile/certifications", "Certifications"],
     ["/profile/notifications", "Notifications"],
