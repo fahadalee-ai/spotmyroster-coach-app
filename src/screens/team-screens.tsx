@@ -142,10 +142,6 @@ function LogoField({ value, onChange }: { value?: string; onChange: (value?: str
           onChange={(event) => {
             const file = event.target.files?.[0];
             if (!file) return;
-            if (file.size > 2_000_000) {
-              toast.error("Use an image under 2 MB.");
-              return;
-            }
             const reader = new FileReader();
             reader.onload = () => onChange(String(reader.result));
             reader.readAsDataURL(file);

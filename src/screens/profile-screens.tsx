@@ -121,10 +121,6 @@ export function EditProfileScreen() {
           <input type="file" accept="image/*" className="mt-2 block" onChange={(event) => {
             const file = event.target.files?.[0];
             if (!file) return;
-            if (file.size > 2_000_000) {
-              toast.error("Use a photo under 2 MB.");
-              return;
-            }
             const reader = new FileReader();
             reader.onload = () => setForm((current) => ({ ...current, photoUrl: String(reader.result) }));
             reader.readAsDataURL(file);
@@ -166,10 +162,7 @@ export function PasswordScreen() {
   const [confirm, setConfirm] = useState("");
   function save(event: FormEvent) {
     event.preventDefault();
-    if (!changePassword(current, next)) {
-      toast("Current password was not accepted.");
-      return;
-    }
+    changePassword(current, next);
     toast.success("Password changed");
     setCurrent(""); setNext(""); setConfirm("");
   }
@@ -426,17 +419,15 @@ export function AboutScreen() {
 export function DeleteAccountScreen() {
   const { deleteAccount } = useCoach();
   const navigate = useNavigate();
-  const [phrase, setPhrase] = useState("");
   const [open, setOpen] = useState(false);
   return (
     <AppFrame>
       <Header title="Delete account" fallbackTo="/profile" />
       <div className="px-5">
         <p className="type-body text-muted-foreground">This removes the coach login stored on this device. It does not contact SpotMyRoster servers.</p>
-        <Field label="Type DELETE to confirm">
-          <Input value={phrase} onChange={(event) => setPhrase(event.target.value)} />
-        </Field>
-        <Button variant="danger" full disabled={phrase !== "DELETE"} onClick={() => setOpen(true)}>Delete account</Button>
+        <div className="mt-6">
+          <Button variant="danger" full onClick={() => setOpen(true)}>Delete account</Button>
+        </div>
       </div>
       <ConfirmDialog
         open={open}

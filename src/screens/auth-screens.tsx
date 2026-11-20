@@ -32,22 +32,17 @@ const slides = [
 ];
 
 export function SplashScreen() {
-  const { ready, data, user } = useCoach();
-  const onboarded = data.onboarded;
+  const { ready } = useCoach();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!ready) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const timer = window.setTimeout(() => {
-      if (!onboarded) navigate({ to: "/onboarding", replace: true });
-      else if (!user) navigate({ to: "/login", replace: true });
-      else if (!user.emailVerified) navigate({ to: "/otp", search: { purpose: "verify", email: user.email }, replace: true });
-      else if (!user.profileComplete) navigate({ to: "/setup", replace: true });
-      else navigate({ to: "/home", replace: true });
+      navigate({ to: "/onboarding", replace: true });
     }, reduced ? 200 : 1300);
     return () => window.clearTimeout(timer);
-  }, [ready, onboarded, user, navigate]);
+  }, [ready, navigate]);
 
   return (
     <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-background px-8">
@@ -109,15 +104,11 @@ export function OnboardingScreen() {
 }
 
 export function LoginScreen() {
-  const { ready, user, login } = useCoach();
+  const { login } = useCoach();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (ready && user?.emailVerified && user.profileComplete) navigate({ to: "/home", replace: true });
-  }, [ready, user, navigate]);
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -125,10 +116,7 @@ export function LoginScreen() {
     window.setTimeout(() => {
       const result = login(email, password);
       setLoading(false);
-      if (!result.ok) {
-        toast("No matching coach account.");
-        return;
-      }
+      if (!result.ok) return;
       if (!result.user.emailVerified) {
         navigate({ to: "/otp", search: { purpose: "verify", email: result.user.email } });
       } else if (!result.user.profileComplete) navigate({ to: "/setup" });
@@ -193,11 +181,7 @@ export function RegisterScreen() {
     window.setTimeout(() => {
       const result = register(form);
       setLoading(false);
-      if (!result.ok) {
-        toast("A coach account already uses that email.");
-        return;
-      }
-      navigate({ to: "/verify-email", search: { email: result.email } });
+      navigate({ to: "/verify-email", search: { email: result.ok ? result.email : form.email } });
     }, 280);
   }
 
@@ -243,11 +227,7 @@ export function ForgotPasswordScreen() {
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
-    const result = requestOtp(email, "reset");
-    if (!result.ok) {
-      toast("No coach account uses that email.");
-      return;
-    }
+    requestOtp(email, "reset");
     navigate({ to: "/otp", search: { purpose: "reset", email: email.trim().toLowerCase() } });
   }
 
@@ -284,20 +264,19 @@ export function OtpScreen({ email, purpose }: { email: string; purpose: "verify"
   const [loading, setLoading] = useState(false);
 
   function update(index: number, value: string) {
-    const clean = value.replace(/\D/g, "");
-    if (clean.length > 1) {
+    if (value.length > 1) {
       const next = [...digits];
-      clean.slice(0, 6 - index).split("").forEach((char, offset) => {
+      value.slice(0, 6 - index).split("").forEach((char, offset) => {
         next[index + offset] = char;
       });
       setDigits(next);
-      document.getElementById(`otp-${Math.min(5, index + clean.length)}`)?.focus();
+      document.getElementById(`otp-${Math.min(5, index + value.length)}`)?.focus();
       return;
     }
     const next = [...digits];
-    next[index] = clean;
+    next[index] = value.slice(-1);
     setDigits(next);
-    if (clean) document.getElementById(`otp-${index + 1}`)?.focus();
+    if (value) document.getElementById(`otp-${index + 1}`)?.focus();
   }
 
   function submit(event: React.FormEvent) {
@@ -307,10 +286,7 @@ export function OtpScreen({ email, purpose }: { email: string; purpose: "verify"
     window.setTimeout(() => {
       const result = verifyOtp(code);
       setLoading(false);
-      if (!result.ok) {
-        toast("That code was not accepted.");
-        return;
-      }
+      if (!result.ok) return;
       toast.success(result.purpose === "verify" ? "Email verified" : "Code accepted");
       if (result.purpose === "verify") navigate({ to: "/auth-success", search: { next: "setup", title: "Email verified" } });
       else navigate({ to: "/reset-password" });
@@ -364,11 +340,7 @@ export function ResetPasswordScreen() {
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
-    const ok = resetPassword(password);
-    if (!ok) {
-      toast("Request a new code, then choose a password.");
-      return;
-    }
+    resetPassword(password);
     navigate({ to: "/password-updated" });
   }
 

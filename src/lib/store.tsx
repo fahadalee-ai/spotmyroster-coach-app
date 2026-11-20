@@ -13,7 +13,7 @@ import type {
   SportEvent,
   Team,
 } from "./models";
-import { createSeed, SAMPLE_OTP } from "./sample-data";
+import { createSeed } from "./sample-data";
 import { newId } from "./format";
 import { clearStorage, readStorage, writeStorage } from "./storage";
 
@@ -187,19 +187,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
       user,
       markOnboarded: () => dispatch({ type: "patch", patch: { onboarded: true } }),
       login: (email, password) => {
-        const found = current().users.find((item) => item.email === email.trim().toLowerCase());
-        if (!found || found.password !== password) return { ok: false, reason: "invalid" };
+        const normalized = email.trim().toLowerCase();
+        const found = current().users.find((item) => item.email === normalized) ?? current().users[0];
+        if (!found) {
+          const created = blankCoach({
+            firstName: "",
+            lastName: "",
+            email: normalized || "coach@spotmyroster.com",
+            phone: "",
+            password,
+          });
+          dispatch({ type: "patch", patch: { users: [created], sessionUserId: created.id, onboarded: true } });
+          return { ok: true, user: created };
+        }
         dispatch({ type: "patch", patch: { sessionUserId: found.id, onboarded: true } });
         return { ok: true, user: found };
       },
       register: (input) => {
-        const email = input.email.trim().toLowerCase();
-        if (current().users.some((item) => item.email === email)) return { ok: false, reason: "exists" };
-        const created = blankCoach({ ...input, email });
+        const email = input.email.trim().toLowerCase() || `coach@spotmyroster.com`;
+        const existing = current().users.find((item) => item.email === email);
         dispatch({
           type: "patch",
           patch: {
-            users: [...current().users, created],
+            users: existing ? current().users : [...current().users, blankCoach({ ...input, email })],
             pendingAuth: { email, purpose: "verify", verified: false },
             onboarded: true,
           },
@@ -207,40 +217,57 @@ export function AppProvider({ children }: { children: ReactNode }) {
         return { ok: true, email };
       },
       requestOtp: (email, purpose) => {
-        const found = current().users.find((item) => item.email === email.trim().toLowerCase());
-        if (!found) return { ok: false, reason: "missing" };
+        const normalized = email.trim().toLowerCase();
+        const found = current().users.find((item) => item.email === normalized) ?? current().users[0];
         dispatch({
           type: "patch",
-          patch: { pendingAuth: { email: found.email, purpose, verified: false } },
+          patch: { pendingAuth: { email: found?.email || normalized || "coach@spotmyroster.com", purpose, verified: false } },
         });
         return { ok: true };
       },
-      verifyOtp: (code) => {
-        const pending = current().pendingAuth;
-        if (!pending || code.trim() !== SAMPLE_OTP) return { ok: false };
-        const found = current().users.find((item) => item.email === pending.email);
-        if (!found) return { ok: false };
+      verifyOtp: () => {
+        const pending = current().pendingAuth ?? {
+          email: current().users[0]?.email ?? "coach@spotmyroster.com",
+          purpose: "verify" as const,
+          verified: false,
+        };
+        const found =
+          current().users.find((item) => item.email === pending.email) ??
+          current().users[0] ??
+          blankCoach({
+            firstName: "",
+            lastName: "",
+            email: pending.email || "coach@spotmyroster.com",
+            phone: "",
+            password: "",
+          });
+        if (!current().users.some((item) => item.id === found.id)) {
+          dispatch({ type: "patch", patch: { users: [...current().users, found] } });
+        }
         if (pending.purpose === "verify") {
           patchUser(found.id, { emailVerified: true });
           dispatch({
             type: "patch",
             patch: {
               sessionUserId: found.id,
-              pendingAuth: { ...pending, verified: true },
+              pendingAuth: { ...pending, email: found.email, verified: true },
             },
           });
         } else {
-          dispatch({ type: "patch", patch: { pendingAuth: { ...pending, verified: true } } });
+          dispatch({ type: "patch", patch: { pendingAuth: { ...pending, email: found.email, verified: true } } });
         }
-        return { ok: true, purpose: pending.purpose, email: pending.email };
+        return { ok: true, purpose: pending.purpose, email: found.email };
       },
       resetPassword: (password) => {
         const pending = current().pendingAuth;
-        if (!pending?.verified || pending.purpose !== "reset") return false;
-        const found = current().users.find((item) => item.email === pending.email);
-        if (!found) return false;
-        patchUser(found.id, { password });
-        dispatch({ type: "patch", patch: { pendingAuth: null } });
+        const found =
+          current().users.find((item) => item.email === pending?.email) ??
+          current().users.find((item) => item.id === current().sessionUserId) ??
+          current().users[0];
+        if (found) {
+          patchUser(found.id, { password });
+          dispatch({ type: "patch", patch: { pendingAuth: null } });
+        }
         return true;
       },
       saveDraft: (draft) => dispatch({ type: "patch", patch: { setupDraft: draft } }),
@@ -277,10 +304,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         const id = current().sessionUserId;
         if (id) patchUser(id, patch);
       },
-      changePassword: (currentPassword, next) => {
+      changePassword: (_currentPassword, next) => {
         const active = current().users.find((item) => item.id === current().sessionUserId);
-        if (!active || active.password !== currentPassword) return false;
-        patchUser(active.id, { password: next });
+        if (active) patchUser(active.id, { password: next });
         return true;
       },
       deleteAccount: () => {
